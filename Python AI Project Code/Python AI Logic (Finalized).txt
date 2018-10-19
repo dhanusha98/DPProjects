@@ -1,0 +1,45 @@
+import re
+
+policy01="getenv(" + "(.*)"+")"
+
+inputfile=open("newFileTxt", "r")
+
+contents= inputfile.readlines()
+contentlist=[]
+
+matchfoundList=[]
+
+for line in contents:
+    line=line.strip()
+    contentlist.append(line)
+
+contentlist_lastelement_index=len(contentlist) - 1
+
+for index in range(len(contentlist)):
+    regexp=re.search(policy01, contentlist[index])
+
+    if contentlist[index].startswith("//"):
+        continue
+    elif regexp:
+         if index != 0 or index != contentlist_lastelement_index:
+             matchedCodePart = contentlist[index-1] + contentlist[index] + contentlist[index+1]
+             matchfoundList.append(matchedCodePart)
+         else:
+              matchedCodePart = contentlist[index]
+              matchfoundList.append(matchedCodePart)
+
+output=0 # OUTPUT CATEGORY OF FILE
+if len(matchfoundList) ==0:
+    output=0
+else:
+    output=1
+
+if output == 0:
+    print("OUTPUT CATEGORY: "+str(output))
+    print("NO STACK OVERFLOW VULNERABILITY FOUND")
+else:
+    print("OUTPUT CATEGORY: " + str(output))
+    print("-------------MATCHING SOURCE CODE----------------")
+    for indexvalue in matchfoundList:
+        print(indexvalue)
+
